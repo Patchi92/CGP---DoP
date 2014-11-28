@@ -29,7 +29,6 @@
 	    
 	    
 	    //Unity Variables
-	    uniform half4 _LightColor0;
 			
 		struct vertexInput{
 			half4 vertex : POSITION;
