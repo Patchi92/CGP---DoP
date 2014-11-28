@@ -1,12 +1,12 @@
 ﻿Shader "MyDepth" {
    Properties {
    		_MainTex ("Diffuse Texture",2D) = "white" {}
-   		_BlurTex ("Blur Texture",2D) = "white"	{}
-   		_BlurSize ("Blur Size", Range (0.0,1.0)) = 1.0
-   		_Color ("Color Tint", Color) = (1.0,1.0,1.0,1.0)
-   		_FogColor ("Fog Color", Color) = (1.0,1.0,1.0,1.0)
-   		_RangeStart ("Fog Close Distance", Float) = 25
-   		_RangeEnd ("Fog Far Distance", Float) = 25
+   		_DepthTex ("Depth Texture",2D) = "white"	{}
+   		_DepthInt ("Depth Intensity", Range (0.0,1.0)) = 1.0
+   		_Color ("Color Intensity", Color) = (1.0,1.0,1.0,1.0)
+   		_DepthColor ("Depth Texture Intensity", Color) = (1.0,1.0,1.0,1.0)
+   		_RangeStart ("Distance Start", Float) = 10
+   		_RangeEnd ("Distance End", Float) = 20
    		
    }
    SubShader {
@@ -19,11 +19,11 @@
 	    // Variables
 	    uniform sampler2D _MainTex;
 	    uniform half4 _MainTex_ST;
-	    uniform sampler2D _BlurTex;
-	    uniform half4 _BlurTex_ST;
-	    uniform fixed _BlurSize;
+	    uniform sampler2D _DepthTex;
+	    uniform half4 _DepthTex_ST;
+	    uniform fixed _DepthInt;
 	    uniform fixed4 _Color;
-	    uniform fixed4 _FogColor;
+	    uniform fixed4 _DepthColor;
 	    uniform half _RangeStart;
 	    uniform half _RangeEnd;
 	    
@@ -62,13 +62,13 @@
 		{
 			//textures
 			fixed4 tex = tex2D(_MainTex, _MainTex_ST.xy * i.tex.xy + _MainTex_ST.zw);
-			fixed4 texB = tex2D(_BlurTex, _BlurTex_ST.xy * i.tex.xy + _BlurTex_ST.zw);
+			fixed4 texB = tex2D(_DepthTex, _DepthTex_ST.xy * i.tex.xy + _DepthTex_ST.zw);
 		
 			//lerp based on distance
-			fixed4 colorBlur = lerp(tex, texB, i.depth * _BlurSize);
+			fixed4 colorBlur = lerp(tex, texB, i.depth * _DepthInt);
 		
 			//return color
-			return fixed4(colorBlur * _Color.xyz + i.depth * _FogColor.xyz, 1.0);
+			return fixed4(colorBlur * _Color.xyz + i.depth * _DepthColor.xyz, 1.0);
 		}
         
          ENDCG
