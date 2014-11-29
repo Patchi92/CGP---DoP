@@ -49,7 +49,7 @@
 			// Unity transform position
 			o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
 			
-			//clapm z-depth to range
+			
 			o.depth = saturate( ( distance( mul(_Object2World, v.vertex) , _WorldSpaceCameraPos.xyz) - _RangeStart)/_RangeEnd );
 			
 			o.tex = v.texcoord;
@@ -65,10 +65,10 @@
 			fixed4 texB = tex2D(_DepthTex, _DepthTex_ST.xy * i.tex.xy + _DepthTex_ST.zw);
 		
 			//lerp based on distance
-			fixed4 colorBlur = lerp(tex, texB, i.depth * _DepthInt);
+			fixed4 colorChange = lerp(tex, texB, i.depth * _DepthInt);
 		
 			//return color
-			return fixed4(colorBlur * _Color.xyz + i.depth * _DepthColor.xyz, 1.0);
+			return fixed4(colorChange * _Color.xyz + i.depth * _DepthColor.xyz, 1.0);
 		}
         
          ENDCG
