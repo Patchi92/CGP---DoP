@@ -1,5 +1,8 @@
 ﻿Shader "MyDepth" {
    Properties {
+   
+   		// These are the properties that can be changed outsite the value, this could be the start and end point of the alpha blend.
+   		
    		_MainTex ("Diffuse Texture",2D) = "white" {}
    		_DepthTex ("Depth Texture",2D) = "white"	{}
    		_DepthInt ("Depth Intensity", Range (0.0,1.0)) = 1.0
@@ -29,11 +32,17 @@
 	    
 	    
 	    //Unity Variables
+	    
+	    
+	    // Struct for grafic card input
 			
 		struct vertexInput{
 			half4 vertex : POSITION;
 			half4 texcoord : TEXCOORD0;
 		};
+		
+		
+		// Struct for unity information
 		
         struct vertexOutput{
 			half4 pos : SV_POSITION;
@@ -50,7 +59,11 @@
 			o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
 			
 			
+			// This line finds the object coords in the world and then finds the distance between the object and the camera.
+			// When that is done the distance between the start and end point is reduced by the start range to make sure the alpha blend
+			// won't take place earlier then our DoF. In the end we saturate the colors
 			o.depth = saturate( ( distance( mul(_Object2World, v.vertex) , _WorldSpaceCameraPos.xyz) - _RangeStart)/_RangeEnd );
+			
 			
 			o.tex = v.texcoord;
 			return o;
